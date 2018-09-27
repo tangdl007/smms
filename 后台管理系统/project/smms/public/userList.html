@@ -55,7 +55,7 @@
                   <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
                     <i class="el-icon-edit"></i>
                     编辑</el-button>
-                  <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+                  <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
                     <i class="el-icon-error"></i>
                     删除</el-button>
                 </template>
@@ -114,8 +114,17 @@
         handleEdit(index, row) {
           console.log(index, row);
         },
-        handleDelete(index, row) {
-          console.log(index, row);
+        handleDelete(id) {
+          var _this = this;
+          //向后端发送请求删除
+          $.get(`/users/delData?id=${id}`,function(data){
+            if(data.errcode===1){
+              alert(data.msg);
+              _this.getAllUsers()
+            }else{
+              alert(data.msg)
+            }
+          })
         }
       },
       filters:{

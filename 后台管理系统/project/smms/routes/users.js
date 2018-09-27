@@ -43,7 +43,22 @@ router.get("/userList",(req,res)=>{
     }
   })
 })
-
+//接受前端删除的请求
+router.get("/delData",(req,res)=>{
+  let {id} = req.query;
+  let sqlStr = `delete from users where id = ${id}`;
+  connection.query(sqlStr,(err,data)=>{
+    if(err){
+      throw err
+    }else{
+      if(data.affectedRows>0){
+        res.send({"errcode":1,"msg":"删除成功"})
+      }else{
+        res.send({"errcode":0,"msg":"删除失败"})
+      }
+    }
+  })
+})
 
 
 module.exports = router;
