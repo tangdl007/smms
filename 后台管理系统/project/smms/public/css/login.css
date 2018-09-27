@@ -1,0 +1,25 @@
+body,html{
+    height:100%;
+    padding:0;
+    margin: 0;
+}
+#app{
+    height: 100%;
+    background-image: url(../imgs/body_bg.png)
+}
+#login{
+    position: relative;
+    height: 100%;
+}
+/* 因为告诉是百分之百，所以已经居中了，只是没有看出来 */
+#login .demo-ruleForm{
+    width: 320px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 200px;
+}
+

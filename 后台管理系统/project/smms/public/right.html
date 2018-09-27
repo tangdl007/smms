@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>华联超市管理系统首页</title>
+    <!-- 注意是字体的文件是和引入的css是同一级目录 -->
+    <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="./libs/vue/vue.min.js"></script>
+    <script src="./libs/elementui/elementui.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            
+            <el-container>
+                <!-- 右侧头部 -->
+                <el-header>
+                    <h2>欢迎你 admin</h2>
+                    <p>查看详细系统信息</p>
+                </el-header>
+                <!-- 右侧主题 -->
+                <el-main>
+                    <div class="contentTitle">系统消息</div>
+                    <!-- 提示文字 -->
+                    <el-alert title="成功提示的文案" type="success">
+                    </el-alert>
+                    <!-- 提示文字 -->
+                    <el-alert title="消息提示的文案" type="info">
+                    </el-alert>
+                    <!-- 表格 -->
+                    <el-row gutter=15>
+                        <el-col :span="12">
+                            <div class="contentTitle">销售排行</div>
+                            <div class="grid-content bg-purple">
+                                <el-table :data="tableData" style="width: 100%">
+                                    <el-table-column prop="date" label="日期" width="180">
+                                    </el-table-column>
+                                    <el-table-column prop="name" label="姓名" width="180">
+                                    </el-table-column>
+                                    <el-table-column prop="address" label="地址">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="contentTitle">销售排行</div>
+                            <div class="grid-content bg-purple-light">
+                                <el-table :data="tableData" style="width: 100%">
+                                    <el-table-column prop="date" label="日期" width="180">
+                                    </el-table-column>
+                                    <el-table-column prop="name" label="姓名" width="180">
+                                    </el-table-column>
+                                    <el-table-column prop="address" label="地址">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-main>
+                <!-- 右侧页脚 -->
+                <el-footer>
+                    <p>&copy;Copyright 2018 华联超市管理系统</p>
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    tableData: [{
+                        date: '2016-05-02',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-04',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1517 弄'
+                    }, {
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1519 弄'
+                    }, {
+                        date: '2016-05-03',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1516 弄'
+                    }]
+                }
+            },
+            methods: {
+                handleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

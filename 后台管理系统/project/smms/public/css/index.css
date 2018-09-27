@@ -1,0 +1,179 @@
+.el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: left;
+   
+  }
+  .el-footer{
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;    
+  }
+  .el-header{
+      padding-top: 30px;
+      height: 90px!important;
+      background-color: #fff;
+  }
+  #padding-r15{
+    padding-right: 15px;
+  }
+.el-aside {
+    background-image: url(../imgs/left_bg.png);
+    color: #fff;
+    text-align: right;
+    font-size: 13px;
+
+}
+  
+.el-main {
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+}
+.el-main .contentTitle{
+    height: 40px;
+    text-align: left;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #ccc;
+    padding-left: 10px;
+    border-radius: 5px;
+}
+  
+body > .el-container {
+    margin-bottom: 40px;
+}
+  
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+}
+  
+.el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+}
+
+
+/* 自己写的css */
+h2,h3,p{
+    margin:0;
+    padding: 0;
+}
+html,body{
+    height: 100%;
+    padding:0;
+    margin: 0;
+}
+
+#app{
+    height: 100%;
+}
+#app .el-container{
+    height: 100%;
+}
+#app el-aside {
+    padding-top: 20px;
+}
+#app .el-container #title{
+    margin-top: 40px;
+}
+
+.el-aside p{
+    padding-top: 30px;
+}
+.el-aside a{
+    text-decoration: none;
+    color: #fff;
+}
+.el-submenu__title{
+    padding-right: 45px;
+    height: 35px;
+    line-height: 35px;
+    background-image:url(../imgs/menu_bg.png);
+    margin-left: 15px; 
+    border-radius: 5px 0px 0px 5px;
+}
+.el-submenu{
+    margin-top: 20px;
+    /* 这一级设置的没有效果那么就往上一级设置 */
+}
+.el-menu-item{
+    background-color: transparent;
+    color: #ccc;
+    height: 35px!important;
+    line-height: 35px!important;
+}
+.el-menu-item:hover{
+    color: greenyellow;
+    background-color: transparent;
+}
+.el-menu-item-group__title{
+    padding: 0;
+}
+.el-menu{
+    background-color: transparent;
+}
+
+.el-submenu__title i{
+    color: #fff;
+}
+
+/* 右侧内容 */
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+  /* 提示 */
+  .el-alert{
+      margin-top: 10px;
+  }
+  /* 表格 */
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+  .el-col{
+      margin-top: 10px;
+  }
+  
+
+  /* 添加页面的样式 */
+  #Addform{
+      margin-top: 50px;
+      width: 400px;
+  }
+  #Addform .el-input__inner{
+      margin-top: 10px;
+  }
+#place{
+    height: 553px;
+}
+.cell{
+    text-align: center;
+}
