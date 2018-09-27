@@ -2,111 +2,106 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>华联超市管理系统列表</title>
-    <!-- 注意是字体的文件是和引入的css是同一级目录 -->
-    <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
-    <link rel="stylesheet" href="css/index.css">
-    <script src="./libs/vue/vue.min.js"></script>
-    <script src="./libs/elementui/elementui.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>华联超市管理系统列表</title>
+  <!-- 注意是字体的文件是和引入的css是同一级目录 -->
+  <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="./libs/vue/vue.min.js"></script>
+  <script src="./libs/elementui/elementui.min.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <el-container>
+  <div id="app">
+    <el-container>
 
-            <el-container>
-                <!-- 右侧头部 -->
-                <el-header>
-                    <h2>欢迎你 admin</h2>
-                    <p>账号管理</p>
-                </el-header>
-                <!-- 右侧主题 -->
-                <el-main>
-                    <div class="contentTitle">账号管理</div>
+      <el-container>
+        <!-- 右侧头部 -->
+        <el-header>
+          <h2>欢迎你 admin</h2>
+          <p>账号管理</p>
+        </el-header>
+        <!-- 右侧主题 -->
+        <el-main>
+          <div class="contentTitle">账号管理</div>
 
-                    <!-- 表格 -->
-                    <div id="place">
-                        <el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-                            <el-table-column type="selection" >
-                            </el-table-column>
-                            <el-table-column label="用户名" >
-                                <template slot-scope="scope">{{ scope.row.date }}</template>
-                            </el-table-column>
-                            <el-table-column prop="name" label="用户组别" >
-                            </el-table-column>
-                            <el-table-column prop="address" label="日期" show-overflow-tooltip>
-                            </el-table-column>
-                            <el-table-column prop="address" label="操作" show-overflow-tooltip>
-                            </el-table-column>
-                        </el-table>
-                        <!-- <div style="margin-top: 20px">
+          <!-- 表格 -->
+          <div id="place">
+            <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+              <el-table-column type="selection">
+              </el-table-column>
+              <el-table-column label="用户名" prop="username">
+                <template slot-scope="scope">{{ scope.row.date }}</template>
+              </el-table-column>
+              <el-table-column prop="groups" label="用户组别">
+              </el-table-column>
+              <el-table-column prop="ctime" label="日期" show-overflow-tooltip>
+              </el-table-column>
+              <el-table-column label="操作" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+                    <i class="el-icon-edit"></i>
+                    编辑</el-button>
+                  <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+                    <i class="el-icon-error"></i>
+                    删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <!-- <div style="margin-top: 20px">
                             <el-button @click="toggleSelection([tableData3[1], tableData3[2]])">切换第二、第三行的选中状态</el-button>
                             <el-button @click="toggleSelection()">取消选择</el-button>
                         </div> -->
-                    </div>
-                    <!-- 右侧页脚 -->
-                    <el-footer>
-                        <p>&copy;Copyright 2018 华联超市管理系统</p>
-                    </el-footer>
-            </el-container>
-        </el-container>
-    </div>
+          </div>
+          <!-- 右侧页脚 -->
+          <el-footer>
+            <p>&copy;Copyright 2018 华联超市管理系统</p>
+          </el-footer>
+      </el-container>
+    </el-container>
+  </div>
 
-    <script>
-        new Vue({
-            el: "#app",
-            data() {
-      return {
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-        multipleSelection: []
-      }
-    },
-
-    methods: {
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          tableData: [],
+          multipleSelection: []
         }
       },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
+      //vue声明周期，created，vue实例创建完成，没有挂载实例，适合准备数据
+      created(){
+          //调用methods的方法，获取全部数据
+          this.getAllUsers();
+      },
+
+      methods: {
+        toggleSelection(rows) {
+          if (rows) {
+            rows.forEach(row => {
+              this.$refs.multipleTable.toggleRowSelection(row);
+            });
+          } else {
+            this.$refs.multipleTable.clearSelection();
+          }
+        },
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        handleEdit(index, row) {
+          console.log(index, row);
+        },
+        handleDelete(index, row) {
+          console.log(index, row);
+        }
       }
-    }
-        })
+    })
 
 
-    </script>
+  </script>
 </body>
 
 </html>

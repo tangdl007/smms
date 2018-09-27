@@ -9,44 +9,46 @@
     <!-- 注意是字体的文件是和引入的css是同一级目录 -->
     <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
     <link rel="stylesheet" href="css/index.css">
+    <!-- 引入jquery -->
+    <script src="libs/jquery/jquery.min.js"></script>
     <script src="./libs/vue/vue.min.js"></script>
     <script src="./libs/elementui/elementui.min.js"></script>
 </head>
 
 <body>
     <div id="app">
-              
-            <el-container>
-                <!-- 右侧头部 -->
-                <el-header>
-                    <h2>欢迎你 admin</h2>
-                    <p>添加管理账号</p>
-                </el-header>
-                <!-- 右侧主题 -->
-                <el-main>
-                    <div class="contentTitle">添加管理员账号</div>
 
-                    <!-- 验证表单 -->
-                    <div id="Addform">
-                        <el-form :model="myform" status-icon :rules="rules" ref="myform" label-width="100px" class="demo-ruleForm">
-                            <el-form-item label="用户名" prop="name">
-                                <el-input type="text" v-model="myform.name" autocomplete="off"></el-input>
+        <el-container>
+            <!-- 右侧头部 -->
+            <el-header>
+                <h2>欢迎你 admin</h2>
+                <p>添加管理账号</p>
+            </el-header>
+            <!-- 右侧主题 -->
+            <el-main>
+                <div class="contentTitle">添加管理员账号</div>
+
+                <!-- 验证表单 -->
+                <div id="Addform">
+                    <el-form :model="myform" status-icon :rules="rules" ref="myform" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="用户名" prop="username" >
+                                <el-input type="text " v-model="myform.username" autocomplete="off "></el-input>
                             </el-form-item>
-                            <el-form-item label="密码" prop="Pass">
-                                <el-input type="text" v-model="myform.Pass" autocomplete="off"></el-input>
+                            <el-form-item label="密码 " prop="password">
+                                <el-input type="text " v-model="myform.password" autocomplete="off "></el-input>
                             </el-form-item>
-                            <el-form-item label="确认密码" prop="checkpass">
+                            <el-form-item label="确认密码 " prop="checkpass">
                                 <el-input v-model="myform.checkpass"></el-input>
                             </el-form-item>
-                            <el-form-item label="选择用户组">
-                                    <el-select v-model="myform.region" placeholder="请选择用户组">
-                                        <el-option label="普通用户" value="normal">普通用户</el-option>
-                                        <el-option label="高级用户" value="vip">高级用户</el-option>
+                            <el-form-item label="选择用户组 " prop="group">
+                                    <el-select v-model="myform.group " placeholder="请选择用户组 ">
+                                        <el-option label="普通用户 " value="normal ">普通用户</el-option>
+                                        <el-option label="高级用户 " value="vip ">高级用户</el-option>
                                     </el-select>
                                 </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="submitForm('myform')">提交</el-button>
-                                <el-button @click="resetForm('myform')">重置</el-button>
+                                <el-button type="primary " @click="submitForm( 'myform') ">提交</el-button>
+                                <el-button @click="resetForm( 'myform') ">重置</el-button>
                             </el-form-item>
                             
                         </el-form>
@@ -62,7 +64,7 @@
 
     <script>
         new Vue({
-            el: "#app",
+            el: "#app ",
             data() {
                 var validatePass = (rule, value, callback) => {
                     if (value === '') {
@@ -76,23 +78,27 @@
 
                 return {
                     myform: {
-                        name: '',
-                        Pass: '',
+                        username: '',
+                        password: '',
                         checkpass: '',
-                        region:""
+                        gruop: " "
                     },
                     rules: {
-                        name: [
+                        username: [
                             { required: true, message: '请输入用户名', trigger: 'blur' },
                             { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
                         ],
-                        Pass: [
+                        password: [
                             { required: true, message: '情输入密码', trigger: 'blur' },
                             { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
                         ],
                         checkpass: [
                             { validator: validatePass, required: true, trigger: 'blur' }
+                        ],
+                        group:[
+                        { required: true, message: '请选择分组', trigger: 'change' },
                         ]
+
                     }
                 };
             },
@@ -100,7 +106,17 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                            //获取数据
+                            const params = {
+                                "username" : this.myform.username,
+                                "password" : this.myform.password,
+                                "groups"   : this.myform.group
+                            };
+                            //将数据发送给后端
+                            $.post("./users/userAdd",params,function(){
+                                console.log("发送数据成功");
+                            })
+
                         } else {
                             console.log('error submit!!');
                             return false;
