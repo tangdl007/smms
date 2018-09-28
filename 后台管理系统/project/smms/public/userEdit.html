@@ -31,25 +31,23 @@
 
                 <!-- 验证表单 -->
                 <div id="Addform">
-                    <el-form :model="myform" status-icon :rules="rules" ref="myform" label-width="100px" class="demo-ruleForm">
+                    <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
                         <el-form-item label="用户名" prop="username" >
-                                <el-input type="text " v-model="myform.username" autocomplete="off "></el-input>
+                                <el-input type="text " v-model="editForm.username" autocomplete="off "></el-input>
                             </el-form-item>
                             <el-form-item label="密码 " prop="password">
-                                <el-input type="text " v-model="myform.password" autocomplete="off "></el-input>
+                                <el-input type="text " v-model="editForm.password" autocomplete="off "></el-input>
                             </el-form-item>
-                            <el-form-item label="确认密码 " prop="checkpass">
-                                <el-input v-model="myform.checkpass"></el-input>
-                            </el-form-item>
+                            
                             <el-form-item label="选择用户组 " prop="group">
-                                    <el-select v-model="myform.group " placeholder="请选择用户组 ">
+                                    <el-select v-model="editForm.group " placeholder="请选择用户组 ">
                                         <el-option label="普通用户" value="普通用户"></el-option>
                                         <el-option label="高级用户" value="高级用户"></el-option>
                                     </el-select>
                                 </el-form-item>
                             <el-form-item>
-                                <el-button type="primary " @click="submitForm( 'myform') ">提交</el-button>
-                                <el-button @click="resetForm( 'myform') ">重置</el-button>
+                                <el-button type="primary " @click="submitForm( 'editForm') ">提交</el-button>
+                                <el-button @click="resetForm( 'editForm') ">重置</el-button>
                             </el-form-item>
                             
                         </el-form>
@@ -68,20 +66,11 @@
             el: "#app ",
             //在return设置验证方法
             data() {
-                var validatePass = (rule, value, callback) => {
-                    if (value === '') {
-                        callback(new Error('请再次输入密码'));
-                    } else if (value !== this.myform.password) {
-                        callback(new Error('两次输入密码不一致!'));
-                    } else {
-                        callback();
-                    }
-                };
+               
                 return {
-                    myform: {
+                    editForm: {
                         username: '',
-                        password: '',
-                        checkpass: '',
+                        password: '',                         
                         group: ""
                     },
                     rules: {
@@ -93,9 +82,7 @@
                             { required: true, message: '情输入密码', trigger: 'blur' },
                             { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
                         ],
-                        checkpass: [
-                            { validator: validatePass, required: true, trigger: 'blur' }
-                        ],
+                       
                         group:[
                         { required: true, message: '请选择分组', trigger: 'change' },
                         ]
@@ -103,23 +90,35 @@
                     }
                 };
             },
+            //用created来接受id并发送ajax，将数据回显
+            created(){
+                var _this=this;
+                const id = location.href.split("=")[1];
+                $.get(`/users/editUser?id=${id}`,function(data){
+                    _this.editForm.username = data[0].username;
+                    _this.editForm.password = data[0].password;
+                    _this.editForm.group = data[0].groups;
+
+                })
+            },
             methods: {
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             //获取数据
                             const params = {
-                                "username" : this.myform.username,
-                                "password" : this.myform.password,
-                                "groups"   : this.myform.group
+                                "username" : this.editForm.username,
+                                "password" : this.editForm.password,
+                                "groups"   : this.editForm.group,
+                                 "id"      : location.href.split("=")[1]
                             };
                             //将数据发送给后端
-                            $.post("./users/userAdd",params,function(data){//返回来的数据res.send的对象
+                            $.post("/users/userEdit",params,function(data){//返回来的数据res.send的对象
                                 if(data.errcode===1){
                                     alert(data.msg);
-                                    location.href="./userList.html"
+                                    location.href = "./userList.html"
                                 }else{
-                                    alert(data.msg);
+                                    alert(data.msg)
                                 }
                             })
 

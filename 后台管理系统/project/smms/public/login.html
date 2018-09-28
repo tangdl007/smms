@@ -9,6 +9,7 @@
     <!-- 注意是字体的文件是和引入的css是同一级目录 -->
     <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
     <link rel="stylesheet" href="css/login.css">
+    <script src="libs/jquery/jquery.min.js"></script>
     <script src="./libs/vue/vue.min.js"></script>
     <script src="./libs/elementui/elementui.min.js"></script>
 </head>
@@ -51,12 +52,12 @@
                 
                 return {
                     myform: {
-                        name: '',
+                        username: '',
                         Pass: '',
                         checkpass: ''
                     },
                     rules: {
-                        name: [
+                        username: [
                         { required: true, message: '请输入用户名', trigger: 'blur' },
                         { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
                         ],
@@ -74,7 +75,21 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                           //保存添加的数据
+                           const params = {
+                               username : this.myform.username,
+                               password : this.myform.Pass
+                           }
+                        //发送ajax请求
+                        $.post("/users/loginCheck",params,function(data){
+                            if(data.errcode===1){
+                                alert(data.msg);
+                                location.href="./index.html"
+                            }else{
+                                alert(data.msg)
+                            }
+                        })
+
                         } else {
                             console.log('error submit!!');
                             return false;

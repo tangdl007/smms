@@ -1,0 +1,23 @@
+1、const mysql = require("mysql");
+const connection = mysql.createConnection({})
+2、modeule.exports = connection;
+3、const connecton = require（"./cnn"）
+4、var params = （{
+    "username" : tabledata.username,
+    ""group"  : tabledata.group
+}）
+5、$.post("./users/add",params,function(data){
+    if(){
+        跳转到list页面
+    }
+})
+6、const sqlStr = "insert into users(username,password,groups) values(?,?,?)"
+const sqlParams = [username,password,group]
+connection.query(sqlStr,sqlParams,(err,data)={
+
+})
+7、在created中准备数据，调用getuser方法
+8、$.get("add",function(data){
+    
+})
+9、后端接受请求
