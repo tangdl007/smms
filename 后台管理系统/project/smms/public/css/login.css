@@ -3,23 +3,29 @@ body,html{
     padding:0;
     margin: 0;
 }
+h2{
+    padding: 0;
+    margin-left: 33px;
+    font-size: 27px;
+}
 #app{
     height: 100%;
-    background-image: url(../imgs/body_bg.png)
-}
-#login{
+    background-image: url(../imgs/body_bg.png);
     position: relative;
-    height: 100%;
 }
-/* 因为告诉是百分之百，所以已经居中了，只是没有看出来 */
-#login .demo-ruleForm{
-    width: 320px;
+/* 百分百居中，用自绝父相，将方位全部设为0，用maigin：auto；来设置 */
+#login {  
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    height: 339px;
     margin: auto;
-    height: 200px;
+    width: 373px;
+    background-color: #fff;
+}
+.demo-ruleForm{
+    width: 333px;
 }
 

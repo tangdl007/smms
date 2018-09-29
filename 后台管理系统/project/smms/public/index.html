@@ -23,6 +23,7 @@
                     <h2 id="title">华联超市管理系统</h2>
                     <p>你好,admin</p>
                     <a href="./right.html" target="contentWrap">管理首页</a>|
+                    <!-- 发送后端请求 ，清除cookie，返回到登陆页面 -->
                     <a href="/users/logout">退出系统</a>
                 </div>
                 <!-- 下拉列表 -->
@@ -39,7 +40,7 @@
                                 <el-menu-item-group>
                                     <el-menu-item index="1-1"> <a href="./userAdd.html" target="contentWrap">添加账号</a> </el-menu-item>
                                     <el-menu-item index="1-2"> <a href="./userList.html" target="contentWrap">账号列表</a> </el-menu-item>
-                                    <el-menu-item index="1-3">密码修改</el-menu-item>
+                                    <el-menu-item index="1-3"> <a href="./pwdEdit.html" target="contentWrap">密码修改</a> </el-menu-item>
                                 </el-menu-item-group>
                             </el-submenu>
                             <!-- 商品添加 -->

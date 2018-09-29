@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>华联超市管理系统添加页面</title>
+    <!-- 注意是字体的文件是和引入的css是同一级目录 -->
+    <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <!-- 引入jquery -->
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="./libs/vue/vue.min.js"></script>
+    <script src="./libs/elementui/elementui.min.js"></script>
+    <script src="/users/checkIsLogin"></script>
+</head>
+
+<body>
+    <div id="app">
+
+        <el-container>
+            <!-- 右侧头部 -->
+            <el-header>
+                <h2>欢迎你 admin</h2>
+                <p>添加管理账号</p>
+            </el-header>
+            <!-- 右侧主题 -->
+            <el-main>
+                <div class="contentTitle">添加管理员账号</div>
+
+                <!-- 验证表单 -->
+                <div id="Addform">
+                    <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="密码" prop="oldpwd" >
+                                <el-input type="text " v-model="editForm.oldpwd" autocomplete="off "></el-input>
+                            </el-form-item>
+                            <el-form-item label="新密码 " prop="newpwd">
+                                <el-input type="text " v-model="editForm.newpwd" autocomplete="off "></el-input>
+                            </el-form-item>
+                            
+                           
+                            <el-form-item>
+                                <el-button type="primary " @click="submitForm( 'editForm') ">提交</el-button>
+                                <el-button @click="resetForm( 'editForm') ">重置</el-button>
+                            </el-form-item>
+                            
+                        </el-form>
+                    </div>
+                </el-main>
+                <!-- 右侧页脚 -->
+                <el-footer>
+                    <p>&copy;Copyright 2018 华联超市管理系统</p>
+                </el-footer>
+            </el-container>
+        
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app ",
+            //在return设置验证方法
+            data() {
+                var validatePass = (rule, value, callback) => {
+                    
+                    //输入的密码
+                    $.get(`/users/editPwd?oldpwd=${value}`,function(data){
+                        if(data.errcode === 1){
+                            callback();
+                        }else{
+                            callback(new Error("请检查你的密码"));
+                        }
+                    })
+                    
+                };
+                return {
+                    editForm: {
+                        oldpwd: '',
+                        newpwd: ''                         
+                    },
+                    rules: {
+                        oldpwd: [
+                            { validator: validatePass, required: true, trigger: 'blur' }
+                        ],
+                        newpwd: [
+                            { required: true, message: '情输入新密码', trigger: 'blur' },
+                            { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
+                        ]                   
+                    }
+                };
+            },
+           
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            //保存新的密码
+                            let newpwd = this.editForm.newpwd;
+                            $.get(`users/newPwd?newpwd=${newpwd}`,function(data){
+                                if(data.errcode===1){
+                                    alert(data.msg);
+                                    window.top.location.href = "./login.html"
+                                }else{
+                                    alert(data.msg);
+                                }
+                            })                    
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                handleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

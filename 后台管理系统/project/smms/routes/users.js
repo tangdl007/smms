@@ -9,7 +9,7 @@ connection.connect(()=>{
 });
 
 
-//接受前端的请求
+//接受前端的请求，将数据加入数据库
 router.post("/userAdd",(req,res)=>{
     let{username,password,groups} = req.body;
 
@@ -34,17 +34,26 @@ router.post("/userAdd",(req,res)=>{
 
 //接受前端请求，获取数据库全部数据
 router.get("/userList",(req,res)=>{
-  //构造数据字符串
-  const sqlStr = "select * from users order by ctime desc";
-  //利用query函数，将数据全部找出来并传给前端
+  let {pageSize,currentPage} = req.query;
+  const n = (currentPage - 1)*pageSize;
+  let sqlStr = `select * from users`;
   connection.query(sqlStr,(err,data)=>{
     if(err){
       throw err
     }else{
-      res.send(data)
+      let totalCount = data.length;
+      sqlStr+=` order by ctime desc limit ${n},${pageSize}`;
+      connection.query(sqlStr,(err,data)=>{
+        if(err){
+          throw err
+        }else{
+          res.send({"totalCount":totalCount,"pageData":data})
+        }
+      })
     }
   })
 })
+
 //接受前端删除的请求
 router.get("/delData",(req,res)=>{
   let {id} = req.query;
@@ -63,7 +72,6 @@ router.get("/delData",(req,res)=>{
 })
 
 //接受修改的请求
-
 router.get("/editUser",(req,res)=>{
     let {id} = req.query;
     let sqlStr = `select * from users where id = ${id}`;
@@ -79,7 +87,7 @@ router.get("/editUser",(req,res)=>{
 //接受修改的数据
 router.post("/userEdit",(req,res)=>{
   let{username,password,groups,id} = req.body;
-  //注意变量要用单引号引起来
+  //注意变量要用单引号引起来，因为值为字符串
   const sqlStr = `update users set username = '${username}',password = '${password}',groups = '${groups}' where id = ${id}`
   connection.query(sqlStr,(err,data)=>{
     if(err){
@@ -96,10 +104,8 @@ router.post("/userEdit",(req,res)=>{
 
 //接受批量删除的请求
 router.post("/batchesDel",(req,res)=>{
-  let idArr = req.body["idArr[]"]
-  
-  const sqlStr = `delete from users where id in ('${idArr}')`;
-
+  let idArr = req.body["idArr[]"] 
+  const sqlStr = `delete from users where id in ('${idArr}')`;//括号里面为数组
   connection.query(sqlStr,(err,data)=>{
     if(err){
       throw err
@@ -114,19 +120,19 @@ router.post("/batchesDel",(req,res)=>{
 })
 
 //接受检查用户名是否存在
-
 router.post("/loginCheck",(req,res)=>{
     let {username,password} = req.body;
     const sqlStr = `select * from users where username='${username}' and password='${password}'`;
-    connection.query(sqlStr,(err,data)=>{
+    connection.query(sqlStr,(err,data)=>{ //data为数组，根据数组的长度判断是否存在
       if(err){
         throw err;
       }else{
         if(data.length){
-          //如果有值那么设置cookie并响应数据
+          //如果有值那么设置cookie并响应数据，在用户的终端也就是浏览器
           res.cookie('username',data[0].username);
           res.cookie('password',data[0].password);
           res.cookie('groups',data[0].groups);
+          res.cookie('id' ,data[0].id )
           res.send({"errcode":1,"msg":"登陆成功"})
         }else{
           res.send({"errcode":0,"msg":"请检查你的用户名和密码"})
@@ -135,10 +141,11 @@ router.post("/loginCheck",(req,res)=>{
     })
 })
 
-//检验是否已经登陆
+//检验是否已经登陆，用script的src进行调用在每一页都调用判断浏览器中是否有cookie
 router.get("/checkIsLogin",(req,res)=>{
   let username = req.cookies.username;
   if(username){
+    //用script调用那么就自带script标签
     res.send('console.log("")')
   }else{
     //因为使用script发送的请求所以res.send自带script标签不用特别的写
@@ -147,12 +154,51 @@ router.get("/checkIsLogin",(req,res)=>{
 })
 
 
-//推出登陆
+//退出登陆
 router.get("/logout",(req,res)=>{
+  //清除
   res.clearCookie("username");
   res.clearCookie("password");
   res.clearCookie("groups");
   res.send('<script>alert("再见");location.href="http://localhost:555/login.html";</script>')
 })
 
+
+//修改密码，验证旧密码
+router.get("/editPwd",(req,res)=>{
+  let {oldpwd} = req.query;
+  //登陆的时候就在cookie中保存了用户的id
+  let id = req.cookies.id;
+  const sqlStr = `select * from users where id = ${id}`;//找到这条数据
+  connection.query(sqlStr,(err,data)=>{
+    if(err){
+      throw err
+    }else{
+      if(data[0].password===oldpwd){
+        res.send({"errcode":1})
+      }else{
+        res.send({"errcode":0})
+      }
+    }
+  });
+})
+
+
+//用新密码修改密码
+router.get("/newPwd",(req,res)=>{
+  let {newpwd} = req.query;
+  let id = req.cookies.id;
+  const sqlStr =`update users set password ='${newpwd}' where id = ${id}`;
+  connection.query(sqlStr,(err,data)=>{
+    if(err){
+      throw err
+    }else{
+      if(data.affectedRows>0){
+        res.send({"errcode":1,"msg":"修改成功"})
+      }else{
+        res.send({"errcode":0,"msg":"修改失败"})
+      }
+    }
+  })
+})
 module.exports = router;
