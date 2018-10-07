@@ -105,7 +105,7 @@ router.post("/userEdit",(req,res)=>{
 //接受批量删除的请求
 router.post("/batchesDel",(req,res)=>{
   let idArr = req.body["idArr[]"] 
-  const sqlStr = `delete from users where id in ('${idArr}')`;//括号里面为数组
+  const sqlStr = `delete from users where id in (${idArr})`;//括号里面为数组
   connection.query(sqlStr,(err,data)=>{
     if(err){
       throw err
@@ -200,5 +200,12 @@ router.get("/newPwd",(req,res)=>{
       }
     }
   })
+})
+
+
+//动态改变用户名
+router.get("/username",(req,res)=>{
+  let username = req.cookies.username;
+  res.send(username);
 })
 module.exports = router;

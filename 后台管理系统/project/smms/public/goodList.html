@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>华联超市商品列表</title>
+  <!-- 注意是字体的文件是和引入的css是同一级目录 -->
+  <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
+  <link rel="stylesheet" href="css/index.css">
+  <!-- 引入jquery -->
+  <script src="libs/jquery/jquery.min.js"></script>
+  <script src="./libs/vue/vue.min.js"></script>
+  <script src="./libs/elementui/elementui.min.js"></script>
+  <!-- 引入moment -->
+  <script src="libs/moment/moment.js"></script>
+  <script src="/users/checkIsLogin"></script>
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+
+      <el-container>
+        <!-- 右侧头部 -->
+        <el-header>
+          <h2>欢迎你 admin</h2>
+          <p>商品管理</p>
+        </el-header>
+        <!-- 右侧主题 -->
+        <el-main>
+          <div class="contentTitle">商品管理</div>
+
+          <!-- 表格 -->
+          <div id="place">
+            <el-form :inline="true" :model="myform" class="demo-form-inline" style="text-align: left;margin-top: 10px;">
+              <el-form-item label="关键字">
+                <el-input v-model="myform.searchWord" placeholder="商品名称或条形码"></el-input>
+              </el-form-item>
+              <el-form-item label="分类名称">
+                <el-select v-model="myform.searchName" placeholder="请选择分类">
+                  <el-option label="全部" value="全部"></el-option>
+                  <el-option label="酒水类" value="酒水类"></el-option>
+                  <el-option label="食品类" value="食品类"></el-option>
+                  <el-option label="烟酒类" value="烟酒类"></el-option>
+                  <el-option label="服装类" value="服装类"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="onSearch">查询</el-button>
+              </el-form-item>
+            </el-form>
+            <el-table ref="multipleTable" :data="goodsData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+              <el-table-column type="selection">
+              </el-table-column>
+              <el-table-column label="条形码" prop="goodCode">
+                <!-- <template slot-scope="scope">
+                   {{ scope.row.date }} 
+
+                </template> -->
+              </el-table-column>
+              <el-table-column prop="goodsName" label="商品名称">
+              </el-table-column>
+              <el-table-column prop="goodGroup" label="所属分类">
+              </el-table-column>
+              <el-table-column prop="salePrice" label="售价">
+              </el-table-column>
+              <el-table-column prop="promotion" label="促销">
+              </el-table-column>
+              <el-table-column prop="ctime" label="日期" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  {{ scope.row.ctime | formatTime }}
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">
+                    <i class="el-icon-edit"></i>
+                    编辑</el-button>
+                  <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
+                    <i class="el-icon-error"></i>
+                    删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <!-- 分页 -->
+            <div style="margin-top: 20px;">
+              <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[1, 3, 7, 10]"
+                :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+              </el-pagination>
+            </div>
+            <!-- 删除按钮 -->
+            <div style="margin-top: 20px;text-align: left">
+              <el-button @click="batchesDel()">批量删除</el-button>
+              <el-button @click="toggleSelection()">取消选择</el-button>
+            </div>
+          </div>
+          <!-- 右侧页脚 -->
+          <el-footer>
+            <p>&copy;Copyright 2018 华联超市管理系统</p>
+          </el-footer>
+      </el-container>
+    </el-container>
+  </div>
+
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          myform: {
+            searchWord: '',
+            searchName: ''
+          },
+          //不能有横杠
+          //每页的数量十多少，在数组中取值
+          pageSize: 3,
+          //当前页
+          currentPage: 1,
+          goodsData: [],
+          multipleSelection: [],
+          totalCount: 10
+        }
+      },
+      //vue声明周期，created，vue实例创建完成，没有挂载实例，适合准备数据
+      created() {
+        //调用methods的方法，获取全部数据
+        this.getAllGoods();
+      },
+
+
+      methods: {
+        //点击搜索商品
+
+
+        onSearch() {
+          //将数据保存下来
+          let searchWord = this.myform.searchWord;
+          let searchName = this.myform.searchName;
+          //保留this
+          const _this = this;
+          //发送ajax请求
+          let params = { "searchWord": searchWord, "searchName": searchName };
+          $.get("/goods/searchGoods", params, function (data) {
+            _this.goodsData = data;
+          });
+
+          //执行函数
+          this.getAllGoods();
+        },
+
+
+
+        handleSizeChange(val) {
+          this.pageSize = val;
+          //console.log(`每页 ${val} 条`);
+          this.getAllGoods();
+        },
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          //console.log(`当前页: ${val}`);
+          this.getAllGoods();
+        },
+        getAllGoods() {
+          let _this = this;
+          //向后端发送当前页面的页数和一页有多少数据
+          let params = {
+            "pageSize":this.pageSize,
+            "currentPage":this.currentPage,
+            "searchWord" :this.myform.searchWord,
+            "searchName" :this.myform.searchName
+          }
+
+          //发送ajax请求，请求接受数据库的数据
+          $.get("/goods/goodList", params, function (data) {
+            _this.goodsData = data.pageData;
+            _this.totalCount = data.totalCount;
+          })
+        },
+
+
+        toggleSelection() {
+          this.$refs.multipleTable.clearSelection();
+        },
+        handleSelectionChange(val) {
+          //选择的项目
+          this.multipleSelection = val;
+        },
+        batchesDel() {
+          const _this = this;
+          //选择删除的项目
+          var idArr = this.multipleSelection.map(v => v.id);
+          if (!idArr.length) {
+            alert("请选择删除的项目");
+            //防止操作不当，使服务器崩溃
+            return false;//阻止函数
+          };
+
+          //将选择的项目发送到后端
+          $.post("/goods/batchesDel", { "idArr": idArr }, function (data) {
+            if (data.errcode === 1) {
+              alert(data.msg);
+              _this.getAllGoods()
+            } else {
+              alert(data.msg);
+            }
+          })
+        },
+        handleEdit(id) {
+          //点击跳转到修改页面并将id传过去
+          location.href = `./userEdit.html?id=${id}`
+        },
+        handleDelete(id) {
+          var _this = this;
+          //向后端发送请求删除
+          $.get(`/goods/delData?id=${id}`, function (data) {
+            if (data.errcode === 1) {
+              alert(data.msg);
+              _this.getAllGoods()
+            } else {
+              alert(data.msg)
+            }
+          })
+        }
+      },
+      filters: {
+        formatTime(value) {
+          return moment(value).format("YYYY-MM-DD HH:mm:ss");
+        }
+      }
+    })
+
+
+  </script>
+</body>
+
+</html>

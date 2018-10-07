@@ -9,6 +9,7 @@
     <!-- 注意是字体的文件是和引入的css是同一级目录 -->
     <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
     <link rel="stylesheet" href="css/index.css">
+    <script src="./libs/jquery/jquery.min.js"></script>
     <script src="./libs/vue/vue.min.js"></script>
     <script src="./libs/elementui/elementui.min.js"></script>
     <script src="/users/checkIsLogin"></script>
@@ -21,7 +22,7 @@
             <el-container>
                 <!-- 右侧头部 -->
                 <el-header>
-                    <h2>欢迎你 admin</h2>
+                    <h2>欢迎你 {{username}}</h2>
                     <p>查看详细系统信息</p>
                 </el-header>
                 <!-- 右侧主题 -->
@@ -74,8 +75,15 @@
     <script>
         new Vue({
             el: "#app",
+            created (){
+                let _this = this;
+                $.get("/users/username",function(data){
+                    _this.username = data;
+                })
+            },
             data() {
                 return {
+                    username:"",
                     tableData: [{
                         date: '2016-05-02',
                         name: '王小虎',

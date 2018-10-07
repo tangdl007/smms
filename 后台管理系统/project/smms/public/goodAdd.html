@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>华联超市管理系统商品添加页面</title>
+    <!-- 注意是字体的文件是和引入的css是同一级目录 -->
+    <link rel="stylesheet" href="./libs/elementui/elementui.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <!-- 引入jquery -->
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="./libs/vue/vue.min.js"></script>
+    <script src="./libs/elementui/elementui.min.js"></script>
+    <script src="/users/checkIsLogin"></script>
+</head>
+
+<body>
+    <div id="app">
+
+        <el-container>
+            <!-- 右侧头部 -->
+            <el-header>
+                <h2>欢迎你 admin</h2>
+                <p>添加管理账号</p>
+            </el-header>
+            <!-- 右侧主题 -->
+            <el-main>
+                <div class="contentTitle">添加管理员账号</div>
+
+                <!-- 验证表单 -->
+                <div id="Addform">
+                    <el-form :model="myform" status-icon :rules="rules" ref="myform" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="所属分类" prop="goodGroup">
+                            <el-select v-model="myform.goodGroup " placeholder="选择分类">
+                                <el-option label="酒水类" value="酒水类"></el-option>
+                                <el-option label="食品类" value="食品类"></el-option>
+                                <el-option label="烟酒类" value="烟酒类"></el-option>
+                                <el-option label="服装类" value="服装类"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="商品条形码" prop="goodCode">
+                            <el-input type="text " v-model="myform.goodCode" autocomplete="off "></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品名称" prop="goodsName">
+                            <el-input type="text " v-model="myform.goodsName" autocomplete="off "></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品售价" prop="salePrice">
+                            <el-input v-model="myform.salePrice"></el-input>
+                        </el-form-item>
+                        <el-form-item label="市场价" prop="marketPrice">
+                            <el-input v-model="myform.marketPrice"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品进价" prop="costPrice">
+                            <el-input v-model="myform.costPrice"></el-input>
+                        </el-form-item>
+                        <el-form-item label="入库数量" prop="totalNum">
+                            <el-input v-model="myform.totalNum"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品重量" prop="goodsWeight">
+                            <el-input v-model="myform.goodsWeight"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品单位" prop="goodUnit">
+                            <el-select v-model="myform.goodUnit" placeholder="选择单位">
+                                <el-option label="件" value="件"></el-option>
+                                <el-option label="箱" value="箱"></el-option>
+                                <el-option label="千克" value="千克"></el-option>
+                                <el-option label="个" value="个"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="会员优惠">
+                            <el-radio-group v-model="myform.resource">
+                                <el-radio label="优惠"></el-radio>
+                                <el-radio label="不优惠"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+
+                        <el-form-item label="是否促销">
+                            <el-radio-group v-model="myform.promotion">
+                                <el-radio label="促销"></el-radio>
+                                <el-radio label="不促销"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+
+                        <el-form-item label="商品介绍" prop="goodDesc">
+                            <el-input type="textarea" v-model="myform.goodDesc"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary " @click="submitForm( 'myform') ">提交</el-button>
+                            <el-button @click="resetForm( 'myform') ">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-main>
+            <!-- 右侧页脚 -->
+            <el-footer>
+                <p>&copy;Copyright 2018 华联超市管理系统</p>
+            </el-footer>
+        </el-container>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app ",
+            //在return设置验证方法
+            data() {
+
+                return {
+                    myform: {
+                        goodGroup: "",
+                        goodsName: "",
+                        goodCode: "",
+                        totalNum: "",
+                        salePrice: "",
+                        marketPrice: "",
+                        costPrice: "",
+                        goodsWeight: "",
+                        goodUnit: "",
+                        resource: "",
+                        promotion: "",
+                        goodDesc: ""
+                    },
+                    rules: {
+                        goodsName: [
+                            { required: true, message: '请输入商品名', trigger: 'blur' },
+                            { min: 1, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
+                        ],
+                        goodCode: [
+                            { required: true, message: '情输入条形码', trigger: 'blur' },
+                            { min: 1, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur' }
+                        ],
+                        totalNum: [
+                            { required: true, message: '情输入商品数量', trigger: 'blur' }
+                        ],
+                        goodGroup: [
+                            { required: true, message: '请选择分组', trigger: 'change' },
+                        ]
+
+                    }
+                };
+            },
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            //获取数据
+                            const params = {
+                                "goodGroup": this.myform.goodGroup,
+                                "goodsName": this.myform.goodsName,
+                                "goodCode": this.myform.goodCode,
+                                "totalNum": this.myform.totalNum,
+                                "salePrice": this.myform.salePrice,
+                                "marketPrice": this.myform.marketPrice,
+                                "costPrice": this.myform.costPrice,
+                                "goodsWeight": this.myform.goodsWeight,
+                                "goodUnit": this.myform.goodUnit,
+                                "resource": this.myform.resource,
+                                "promotion": this.myform.promotion,
+                                "goodDesc": this.myform.goodDesc
+                            };
+                            //将数据发送给后端
+                            $.post("/goods/goodsAdd", params, function (data) {//返回来的数据res.send的对象
+                                if (data.errCode === 1) {
+                                    alert(data.msg);
+                                    location.href = "./goodList.html";
+                                } else {
+                                    alert(data.msg)
+                                }
+                            })
+
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                handleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>
